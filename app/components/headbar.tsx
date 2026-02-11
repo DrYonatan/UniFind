@@ -2,11 +2,14 @@ import Link from "next/link";
 
 export default function HeadBar() {
   return (
-    <div className="flex h-16 items-center justify-between px-6 shadow-xl w-full">
-      <div className="text-lg font-semibold text-gray-900 flex items-center">
+    <div className="relative flex h-16 items-center justify-between px-6 shadow-xl w-full z-40 bg-white">
+      <Link
+        href="/"
+        className="text-lg font-semibold text-gray-900 flex items-center"
+      >
         <img src={"/logo.png"} alt="Logo" className="h-15 w-15 mr-2" />
         UniFind
-      </div>
+      </Link>
 
       <nav className="hidden md:flex items-center gap-6">
         <Link href="/" className="text-sm text-gray-600 hover:text-gray-900">

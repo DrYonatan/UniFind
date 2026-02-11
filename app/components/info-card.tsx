@@ -10,7 +10,7 @@ export default function InfoCard({ card }: { card: InfoCardData }) {
   return (
     <div
       ref={ref}
-      className={`flex flex-col items-center gap-4 rounded-lg bg-white p-6 shadow-md w-100 ${isInView ? "slide-in-up" : "opacity-0"}`}
+      className={`flex flex-col items-center gap-4 rounded-lg bg-white p-6 shadow-md w-full md:w-100 ${isInView ? "slide-in-up" : "opacity-0"}`}
     >
       <h2 className="text-xl font-semibold">{card.title}</h2>
       <img src={card.icon} alt="Image" width={250} height={250} />
