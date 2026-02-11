@@ -41,7 +41,7 @@ export default async function BrowsePage(props: {
     <div className="h-full flex">
       <BrowseSideBar />
       <div className="flex flex-col items-center gap-6 p-6 w-2/3 bg-gray-100 mx-10 overflow-y-scroll">
-        {universities.map((university) => {
+        {universities.map((university: University, index: number) => {
           if (
             university.name
               .toLowerCase()
@@ -49,7 +49,8 @@ export default async function BrowsePage(props: {
           ) {
             return (
               <UniversityCard
-                key={university.id}
+                key={index}
+                id={university.id}
                 title={university.name}
                 description={university.location}
               />

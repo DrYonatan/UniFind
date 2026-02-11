@@ -24,12 +24,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-full absolute h-full`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full flex flex-col`}
       >
         <HeadBar />
-        <main className="w-full z-0 relative h-full">{children}</main>
+        <main className="w-full z-0 h-full">{children}</main>
       </body>
     </html>
   );

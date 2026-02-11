@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function HeadBar() {
   return (
-    <div className="relative flex h-16 items-center justify-between px-6 shadow-xl w-full z-40 bg-white">
+    <div className="flex h-16 items-center justify-between px-6 shadow-xl w-full z-40 bg-white">
       <Link
         href="/"
         className="text-lg font-semibold text-gray-900 flex items-center"
