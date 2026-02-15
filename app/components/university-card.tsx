@@ -13,7 +13,7 @@ export default function UniversityCard({
 }: UniversityCardProps) {
   return (
     <Link
-      href={`/browse/${id}`}
+      href={`/browse/${id}/demographics`}
       className={`flex flex-col items-center gap-4 rounded-lg bg-white p-6 shadow-md w-full md:w-100 cursor-pointer hover:scale-105 duration-200 slide-in-up`}
     >
       <h2 className="text-xl font-semibold">{title}</h2>
