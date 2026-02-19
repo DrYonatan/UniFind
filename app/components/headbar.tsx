@@ -1,6 +1,20 @@
+import { logout } from "@/app/actions/auth";
+import { decrypt } from "@/app/lib/session";
+import { JWTPayload } from "jose";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
-export default function HeadBar() {
+export default async function HeadBar() {
+  const cookieStore = await cookies();
+  const sessionCookie: string | undefined = cookieStore.get("session")?.value;
+
+  let userId = null;
+
+  if (sessionCookie) {
+    const session: JWTPayload | undefined = await decrypt(sessionCookie);
+    userId = session?.userId;
+  }
+
   return (
     <div className="flex h-16 items-center justify-between px-6 shadow-xl w-full z-40 bg-white">
       <Link
@@ -23,18 +37,29 @@ export default function HeadBar() {
         </Link>
       </nav>
 
-      <div className="flex items-center gap-3">
-        <Link href={"/login"}>
-          <button className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
-            Log in
+      {userId ? (
+        <div className="flex items-center gap-3">
+          <button
+            onClick={logout}
+            className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+          >
+            Log out
           </button>
-        </Link>
-        <Link href={"/signup"}>
-          <button className="rounded-md bg-gray-900 px-4 py-2 text-sm text-white hover:bg-black cursor-pointer">
-            Sign up
-          </button>
-        </Link>
-      </div>
+        </div>
+      ) : (
+        <div className="flex items-center gap-3">
+          <Link href={"/login"}>
+            <button className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+              Log in
+            </button>
+          </Link>
+          <Link href={"/signup"}>
+            <button className="rounded-md bg-gray-900 px-4 py-2 text-sm text-white hover:bg-black cursor-pointer">
+              Sign up
+            </button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
