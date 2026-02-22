@@ -1,4 +1,3 @@
-import { logout } from "@/app/actions/auth";
 import { decrypt } from "@/app/lib/session";
 import { JWTPayload } from "jose";
 import { cookies } from "next/headers";
