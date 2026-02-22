@@ -39,12 +39,17 @@ export default async function HeadBar() {
 
       {userId ? (
         <div className="flex items-center gap-3">
-          <button
-            onClick={logout}
-            className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-          >
-            Log out
-          </button>
+          <Link href="/profile">
+            <img
+              src={
+                "https://thumbs.dreamstime.com/b/profil-vectoriel-avatar-par-d%C3%A9faut-utilisateur-179376714.jpg"
+              }
+              width={40}
+              height={40}
+              alt="Profile Picture"
+              className="rounded-full"
+            />
+          </Link>
         </div>
       ) : (
         <div className="flex items-center gap-3">
