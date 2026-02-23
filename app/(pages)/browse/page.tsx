@@ -1,5 +1,6 @@
 import BrowseSideBar from "@/app/components/browse-side-bar";
 import UniversityCard from "@/app/components/university-card";
+import { universities } from "@/app/content/testing/universities";
 import { University } from "@/app/types/university";
 
 export default async function BrowsePage(props: {
@@ -8,34 +9,6 @@ export default async function BrowsePage(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-
-  const universities: University[] = [
-    {
-      id: "1",
-      name: "Harvard University",
-      location: "Cambridge, MA",
-    },
-    {
-      id: "2",
-      name: "Stanford University",
-      location: "Stanford, CA",
-    },
-    {
-      id: "3",
-      name: "Stanford University",
-      location: "Stanford, CA",
-    },
-    {
-      id: "4",
-      name: "Stanford University",
-      location: "Stanford, CA",
-    },
-    {
-      id: "5",
-      name: "Stanford University",
-      location: "Stanford, CA",
-    },
-  ];
 
   return (
     <div className="h-full flex">

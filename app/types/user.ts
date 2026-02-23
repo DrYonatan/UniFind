@@ -4,6 +4,6 @@ export interface User {
   id: string;
   username: string;
   email: string;
-  attendedUniversity?: string;
+  attendedUniversity?: University;
   joinedAt: Date;
 }

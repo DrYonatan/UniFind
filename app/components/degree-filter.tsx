@@ -9,6 +9,7 @@ export default function DegreeFilter() {
   return (
     <div className="bg-white rounded-2xl shadow-md p-4">
       <h1 className="text-lg font-semibold text-gray-900">Degrees</h1>
+
       <Link
         href={{
           pathname: `${pathName}`,
