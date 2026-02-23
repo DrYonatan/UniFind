@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { createSession, deleteSession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { prisma } from "@/app/lib/prisma";
+import z from "zod";
 
 export async function signup(state: FormState, formData: FormData) {
   // Validate form fields
@@ -17,7 +18,7 @@ export async function signup(state: FormState, formData: FormData) {
   // If any form fields are invalid, return early
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      errors: z.treeifyError(validatedFields.error).properties,
     };
   }
 

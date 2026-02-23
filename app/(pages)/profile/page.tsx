@@ -1,25 +1,31 @@
 import { logout } from "@/app/actions/auth";
+import { requireUser } from "@/app/lib/auth";
+import { User } from "@/app/types/user";
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const user: User = await requireUser();
+
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md  slide-in-up">
         {/* Profile Header */}
         <div className="flex flex-col items-center">
           {/* Profile Picture */}
           <div className="relative w-28 h-28">
             <img
-              src="https://via.placeholder.com/120"
+              src="https://thumbs.dreamstime.com/b/profil-vectoriel-avatar-par-d%C3%A9faut-utilisateur-179376714.jpg"
               alt="Profile Picture"
-              className="rounded-full object-cover border-4 border-gray-200 shadow-md"
+              className="rounded-full object-cover border-4 border-gray-200"
             />
           </div>
 
           {/* Username */}
-          <h2 className="mt-4 text-2xl font-semibold text-gray-800">JohnDoe</h2>
+          <h2 className="mt-4 text-2xl font-semibold text-gray-800">
+            {user.username}
+          </h2>
 
           {/* Email */}
-          <p className="text-gray-500 mt-1">johndoe@example.com</p>
+          <p className="text-gray-500 mt-1">{user.email}</p>
         </div>
 
         {/* Divider */}
