@@ -3,6 +3,7 @@ import { decrypt } from "@/app/lib/session";
 import { User } from "@/app/types/user";
 import { JWTPayload } from "jose";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function getCurrentUser(): Promise<User | null> {
   const session: string | undefined = (await cookies()).get("session")?.value;
@@ -18,5 +19,11 @@ export async function getCurrentUser(): Promise<User | null> {
     },
   });
 
+  return user;
+}
+
+export async function requireUser(): Promise<User> {
+  const user: User | null = await getCurrentUser();
+  if (!user) redirect("/login");
   return user;
 }
