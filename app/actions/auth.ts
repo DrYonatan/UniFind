@@ -32,7 +32,7 @@ export async function signup(state: FormState, formData: FormData) {
         username: name,
         email,
         password: hashedPassword,
-        attendedUniversity: "",
+        attendedUniversityId: null,
         joinedAt: new Date(Date.now()),
       },
     });

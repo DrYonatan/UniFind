@@ -1,6 +1,6 @@
 import BrowseSideBar from "@/app/components/browse-side-bar";
 import UniversityCard from "@/app/components/university-card";
-import { universities } from "@/app/content/testing/universities";
+import { fetchUniversitiesFromWikidata } from "@/app/lib/universities";
 import { University } from "@/app/types/university";
 
 export default async function BrowsePage(props: {
@@ -9,6 +9,7 @@ export default async function BrowsePage(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
+  const universities: University[] = await fetchUniversitiesFromWikidata();
 
   return (
     <div className="h-full flex">

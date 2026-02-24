@@ -19,8 +19,8 @@ model User {
   username             String
   password             String
 
-  attended_university_id String?     
-  attendedUniversity   University? @relation(fields: [attended_university_id], references: [id])
+  attendedUniversityId String?   @map("attended_university_id")
+  attendedUniversity   University? @relation(fields: [attendedUniversityId], references: [id])
 
   joinedAt             DateTime    @default(now())  @map("joined_at")
 
@@ -31,7 +31,7 @@ model University {
   id        String  @id @default(cuid())
   name      String
 
-  students  User[]  // one-to-many back relation
+  students  User[]
 
   @@map("universities")
 }
