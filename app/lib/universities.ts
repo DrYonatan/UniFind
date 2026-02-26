@@ -10,7 +10,7 @@ export async function fetchUniversitiesFromWikidata() {
 
   const url: string = "https://query.wikidata.org/sparql";
 
-  const res = await fetch("https://query.wikidata.org/sparql", {
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/sparql-query",
@@ -27,6 +27,7 @@ export async function fetchUniversitiesFromWikidata() {
     const match = point.match(/Point\(([-\d.]+) ([-\d.]+)\)/);
 
     return {
+      id: item.university.value.split("/").pop(),
       name: item.universityLabel.value,
       country: item.countryLabel?.value ?? "Unknown",
       lng: parseFloat(match[1]),

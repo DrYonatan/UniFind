@@ -1,6 +1,7 @@
 import DegreeFilter from "@/app/components/degree-filter";
 import { JoinButton } from "@/app/components/join-button";
 import { universityMetrics } from "@/app/lib/university-metrics";
+import { University } from "@/app/types/university";
 import Link from "next/link";
 import { Suspense } from "react";
 
