@@ -1,3 +1,21 @@
+import { prisma } from "@/app/lib/prisma";
+
+type ApiUniversity = {
+  id: string;
+  name: string;
+  country?: string;
+};
+
+const translateFromWikidata = (item: any): ApiUniversity => {
+  return {
+    id: item.results.bindings[0].university.value.split("/").pop(),
+    name: item.results.bindings[0].universityLabel.value,
+    country: item.results.bindings[0].countryLabel?.value ?? "Unknown",
+  };
+};
+
+const url: string = "https://query.wikidata.org/sparql";
+
 export async function fetchUniversitiesFromWikidata() {
   const query = `SELECT ?university ?universityLabel ?countryLabel ?location WHERE {
       ?university wdt:P31 wd:Q3918.
@@ -7,8 +25,6 @@ export async function fetchUniversitiesFromWikidata() {
     }
     LIMIT 200
   `;
-
-  const url: string = "https://query.wikidata.org/sparql";
 
   const res = await fetch(url, {
     method: "POST",
@@ -34,4 +50,58 @@ export async function fetchUniversitiesFromWikidata() {
       lat: parseFloat(match[2]),
     };
   });
+}
+
+export async function getOrCreateUniversity(externalId: string) {
+  let university = await prisma.university.findUnique({
+    where: { externalId },
+  });
+
+  if (university) {
+    return university;
+  }
+
+  const apiData = await fetchUniversityFromAPI(externalId);
+
+  const apiUniversity: ApiUniversity = translateFromWikidata(apiData);
+
+  university = await prisma.university.create({
+    data: {
+      name: apiUniversity.name,
+      country: apiUniversity.country,
+      externalId: apiUniversity.id,
+    },
+  });
+
+  return university;
+}
+
+async function fetchUniversityFromAPI(id: string) {
+  const query = `
+  SELECT ?university ?universityLabel ?countryLabel ?location WHERE {
+    BIND(wd:${id} AS ?university)
+
+    ?university wdt:P31 wd:Q3918.
+    OPTIONAL { ?university wdt:P17 ?country. }
+    OPTIONAL { ?university wdt:P625 ?location. }
+
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+  }
+  `;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/sparql-query",
+      Accept: "application/json",
+      "User-Agent": "MyNextApp/1.0 (your-email@example.com)",
+    },
+    body: query,
+  });
+
+  if (!res.ok) {
+    throw new Error("University not found in external API");
+  }
+
+  return res.json();
 }

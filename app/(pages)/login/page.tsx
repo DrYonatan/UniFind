@@ -1,7 +1,13 @@
 import LoginForm from "@/app/components/login-form";
+import { isLoggedIn } from "@/app/lib/auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const isLoggedInValue: boolean = await isLoggedIn();
+
+  if (isLoggedInValue) redirect("/");
+
   return (
     <div className="h-full flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 my-10 slide-in-up">

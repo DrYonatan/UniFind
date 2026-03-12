@@ -27,3 +27,8 @@ export async function requireUser(): Promise<User> {
   if (!user) redirect("/login");
   return user;
 }
+
+export async function isLoggedIn(): Promise<boolean> {
+  const user: User | null = await getCurrentUser();
+  return !!user;
+}

@@ -1,5 +1,6 @@
 import DegreeFilter from "@/app/components/degree-filter";
 import { JoinButton } from "@/app/components/join-button";
+import { getOrCreateUniversity } from "@/app/lib/universities";
 import { universityMetrics } from "@/app/lib/university-metrics";
 import { University } from "@/app/types/university";
 import Link from "next/link";
@@ -14,6 +15,8 @@ export default async function UniversityLayout({
 }) {
   const universityId: string = (await params).id;
 
+  const university = await getOrCreateUniversity(universityId);
+
   return (
     <div className="h-full bg-gray-100 p-6">
       <div className="flex flex-col md:flex-row gap-6 h-full">
@@ -21,10 +24,10 @@ export default async function UniversityLayout({
           <div className="bg-white rounded-2xl shadow-md p-6 flex justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                Harvard University
+                {university.name}
               </h1>
               <p className="text-gray-600 mt-2">
-                Cambridge, Massachusetts, USA
+                {university.country}
               </p>
             </div>
             <Suspense
