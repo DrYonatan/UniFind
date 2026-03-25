@@ -17,7 +17,8 @@ const translateFromWikidata = (item: any): ApiUniversity => {
 const url: string = "https://query.wikidata.org/sparql";
 
 export async function fetchUniversitiesFromWikidata() {
-  const query = `SELECT ?university ?universityLabel ?countryLabel ?location WHERE {
+  try {
+    const query = `SELECT ?university ?universityLabel ?countryLabel ?location WHERE {
       ?university wdt:P31 wd:Q3918.
       ?university wdt:P17 ?country.
       ?university wdt:P625 ?location.
@@ -26,58 +27,72 @@ export async function fetchUniversitiesFromWikidata() {
     LIMIT 200
   `;
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/sparql-query",
-      Accept: "application/json",
-      "User-Agent": "MyNextApp/1.0 (your-email@example.com)",
-    },
-    body: query,
-  });
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/sparql-query",
+        Accept: "application/json",
+        "User-Agent": "MyNextApp/1.0 (your-email@example.com)",
+      },
+      body: query,
+    });
 
-  const data = await res.json();
+    if (!res.ok) {
+      throw new Error("Failed to fetch universities from Wikidata");
+    }
 
-  return data.results.bindings.map((item: any) => {
-    const point = item.location.value; // "Point(-71.1167 42.3770)"
-    const match = point.match(/Point\(([-\d.]+) ([-\d.]+)\)/);
+    const data = await res.json();
 
-    return {
-      id: item.university.value.split("/").pop(),
-      name: item.universityLabel.value,
-      country: item.countryLabel?.value ?? "Unknown",
-      lng: parseFloat(match[1]),
-      lat: parseFloat(match[2]),
-    };
-  });
+    return data.results.bindings.map((item: any) => {
+      const point = item.location.value; // "Point(-71.1167 42.3770)"
+      const match = point.match(/Point\(([-\d.]+) ([-\d.]+)\)/);
+
+      return {
+        id: item.university.value.split("/").pop(),
+        name: item.universityLabel.value,
+        country: item.countryLabel?.value ?? "Unknown",
+        lng: parseFloat(match[1]),
+        lat: parseFloat(match[2]),
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching universities from Wikidata:", error);
+    return [];
+  }
 }
 
 export async function getOrCreateUniversity(externalId: string) {
-  let university = await prisma.university.findUnique({
-    where: { externalId },
-  });
+  try {
+    let university = await prisma.university.findUnique({
+      where: { externalId },
+    });
 
-  if (university) {
+    if (university) {
+      return university;
+    }
+
+    const apiData = await fetchUniversityFromAPI(externalId);
+
+    const apiUniversity: ApiUniversity = translateFromWikidata(apiData);
+
+    university = await prisma.university.create({
+      data: {
+        name: apiUniversity.name,
+        country: apiUniversity.country,
+        externalId: apiUniversity.id,
+      },
+    });
+
     return university;
+  } catch (error) {
+    console.error("Error fetching or creating university:", error);
+    return null;
   }
-
-  const apiData = await fetchUniversityFromAPI(externalId);
-
-  const apiUniversity: ApiUniversity = translateFromWikidata(apiData);
-
-  university = await prisma.university.create({
-    data: {
-      name: apiUniversity.name,
-      country: apiUniversity.country,
-      externalId: apiUniversity.id,
-    },
-  });
-
-  return university;
 }
 
 async function fetchUniversityFromAPI(id: string) {
-  const query = `
+  try {
+    const query = `
   SELECT ?university ?universityLabel ?countryLabel ?location WHERE {
     BIND(wd:${id} AS ?university)
 
@@ -89,19 +104,23 @@ async function fetchUniversityFromAPI(id: string) {
   }
   `;
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/sparql-query",
-      Accept: "application/json",
-      "User-Agent": "MyNextApp/1.0 (your-email@example.com)",
-    },
-    body: query,
-  });
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/sparql-query",
+        Accept: "application/json",
+        "User-Agent": "MyNextApp/1.0 (your-email@example.com)",
+      },
+      body: query,
+    });
 
-  if (!res.ok) {
-    throw new Error("University not found in external API");
+    if (!res.ok) {
+      throw new Error("University not found in external API");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("Error fetching university from API:", error);
+    return null;
   }
-
-  return res.json();
 }
