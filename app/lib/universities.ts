@@ -1,4 +1,5 @@
 import { prisma } from "@/app/lib/prisma";
+import { UniversityFilter } from "@/app/types/university-filter";
 
 type ApiUniversity = {
   id: string;
@@ -35,6 +36,79 @@ export async function fetchUniversitiesFromWikidata() {
         "User-Agent": "MyNextApp/1.0 (your-email@example.com)",
       },
       body: query,
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch universities from Wikidata");
+    }
+
+    const data = await res.json();
+
+    return data.results.bindings.map((item: any) => {
+      const point = item.location.value; // "Point(-71.1167 42.3770)"
+      const match = point.match(/Point\(([-\d.]+) ([-\d.]+)\)/);
+
+      return {
+        id: item.university.value.split("/").pop(),
+        name: item.universityLabel.value,
+        country: item.countryLabel?.value ?? "Unknown",
+        lng: parseFloat(match[1]),
+        lat: parseFloat(match[2]),
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching universities from Wikidata:", error);
+    return [];
+  }
+}
+
+export async function fetchUniversitiesFromWikidataFiltered(
+  filter: UniversityFilter,
+) {
+  try {
+    const queryParts: string[] = [];
+
+    // Base query
+    queryParts.push(`
+      SELECT ?university ?universityLabel ?country ?countryLabel ?location WHERE {
+        ?university wdt:P31 wd:Q3918.
+        ?university wdt:P17 ?country.
+        ?university wdt:P625 ?location.
+    `);
+
+    if (filter.countries && filter.countries.length > 0) {
+      const values = filter.countries.map((c) => `wd:${c}`).join(" ");
+      queryParts.push(`VALUES ?country { ${values} }`);
+    }
+
+    if (filter.query && filter.query.trim() !== "") {
+      const safeQuery = filter.query.toLowerCase().replace(/"/g, '\\"');
+      queryParts.push(`
+  ?university rdfs:label ?universityLabel.
+  FILTER(LANG(?universityLabel) = "en")
+  FILTER(CONTAINS(LCASE(?universityLabel), "${safeQuery}"))
+`);
+    }
+
+    queryParts.push(`
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      LIMIT 200
+    `);
+
+    const query = queryParts.join("\n");
+
+    const fullUrl =
+      "https://query.wikidata.org/sparql?format=json&query=" +
+      encodeURIComponent(query);
+
+    const res = await fetch(fullUrl, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "MyNextApp/1.0 (your-email@example.com)",
+      },
+      cache: "no-store",
     });
 
     if (!res.ok) {

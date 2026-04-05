@@ -2,7 +2,6 @@ import DegreeFilter from "@/app/components/degree-filter";
 import { JoinButton } from "@/app/components/join-button";
 import { getOrCreateUniversity } from "@/app/lib/universities";
 import { universityMetrics } from "@/app/lib/university-metrics";
-import { University } from "@/app/types/university";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -11,7 +10,7 @@ export default async function UniversityLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { id: string };
+  params: any;
 }) {
   const universityId: string = (await params).id;
 
@@ -24,11 +23,9 @@ export default async function UniversityLayout({
           <div className="bg-white rounded-2xl shadow-md p-6 flex justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                {university.name}
+                {university?.name}
               </h1>
-              <p className="text-gray-600 mt-2">
-                {university.country}
-              </p>
+              <p className="text-gray-600 mt-2">{university?.country}</p>
             </div>
             <Suspense
               fallback={

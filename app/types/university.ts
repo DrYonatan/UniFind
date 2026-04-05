@@ -5,7 +5,7 @@ export interface University {
   id: string;
   externalId?: string;
   name: string;
-  location: string;
+  country: string;
   degrees: Degree[];
   students: User[];
 }

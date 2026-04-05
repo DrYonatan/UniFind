@@ -7,7 +7,10 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/app/lib/prisma";
 import z from "zod";
 
-export async function signup(state: FormState, formData: FormData) {
+export async function signup(
+  state: FormState,
+  formData: FormData,
+): Promise<FormState> {
   // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
     name: formData.get("name"),
@@ -17,8 +20,14 @@ export async function signup(state: FormState, formData: FormData) {
 
   // If any form fields are invalid, return early
   if (!validatedFields.success) {
+    const tree = z.treeifyError(validatedFields.error);
+
     return {
-      errors: z.treeifyError(validatedFields.error).properties,
+      errors: {
+        name: tree.properties?.name?.errors,
+        email: tree.properties?.email?.errors,
+        password: tree.properties?.password?.errors,
+      },
     };
   }
 

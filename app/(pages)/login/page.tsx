@@ -17,8 +17,7 @@ export default async function LoginPage() {
 
         <LoginForm />
 
-        {/* Footer */}
-        <p className="text-center text-sm text-gray-600 mt-6">
+        <p className="flex justify-center gap-1 text-center text-sm text-gray-600 mt-6">
           Don't have an account?
           <Link
             href="/signup"

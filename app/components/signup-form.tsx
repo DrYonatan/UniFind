@@ -1,11 +1,15 @@
 "use client";
 import { signup } from "@/app/actions/auth";
+import { FormState } from "@/app/lib/definitions";
 import Link from "next/link";
 import { useActionState } from "react";
 
 export default function SignUpForm() {
-  const [state, action, pending] = useActionState(signup, undefined);
+  const initialState: FormState = {
+    errors: undefined,
+  };
 
+  const [state, action, pending] = useActionState(signup, initialState);
   return (
     <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 my-10 slide-in-up">
       <h1 className="text-2xl font-bold text-gray-900 mb-2">
