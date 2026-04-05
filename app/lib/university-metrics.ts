@@ -1,18 +1,21 @@
+import Demographics from "@/app/components/university-metrics/demographics";
+import { UniversityMetric } from "@/app/types/university-metric";
+
 export const universityMetrics: UniversityMetric[] = [
   {
-    slug: "demographics",
     label: "Demographics",
+    component: Demographics,
   },
-  {
-    slug: "weather",
-    label: "Weather",
-  },
-  {
-    slug: "student-life",
-    label: "Student Life",
-  },
-  {
-    slug: "rankings",
-    label: "Rankings",
-  },
+  // {
+  //   label: "Weather",
+  //   component: null,
+  // },
+  // {
+  //   label: "Student Life",
+  //   component: null,
+  // },
+  // {
+  //   label: "Rankings",
+  //   component: null,
+  // },
 ] as const;

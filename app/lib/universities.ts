@@ -1,4 +1,5 @@
 import { prisma } from "@/app/lib/prisma";
+import { University } from "@/app/types/university";
 import { UniversityFilter } from "@/app/types/university-filter";
 
 type ApiUniversity = {
@@ -135,14 +136,24 @@ export async function fetchUniversitiesFromWikidataFiltered(
   }
 }
 
-export async function getOrCreateUniversity(externalId: string) {
+export async function getOrCreateUniversity(
+  externalId: string,
+): Promise<University | null> {
   try {
     let university = await prisma.university.findUnique({
       where: { externalId },
     });
 
     if (university) {
-      return university;
+      const res: University = {
+        id: university.id,
+        name: university.name,
+        country: university.country ? university.country : "Unknown",
+        degrees: [],
+        students: [],
+      };
+
+      return res;
     }
 
     const apiData = await fetchUniversityFromAPI(externalId);
@@ -157,7 +168,15 @@ export async function getOrCreateUniversity(externalId: string) {
       },
     });
 
-    return university;
+    const res: University = {
+      id: university.id,
+      name: university.name,
+      country: university.country ? university.country : "Unknown",
+      degrees: [],
+      students: [],
+    };
+
+    return res;
   } catch (error) {
     console.error("Error fetching or creating university:", error);
     return null;
