@@ -150,7 +150,6 @@ export async function getOrCreateUniversity(
         name: university.name,
         country: university.country ? university.country : "Unknown",
         degrees: [],
-        students: [],
       };
 
       return res;
@@ -173,7 +172,6 @@ export async function getOrCreateUniversity(
       name: university.name,
       country: university.country ? university.country : "Unknown",
       degrees: [],
-      students: [],
     };
 
     return res;

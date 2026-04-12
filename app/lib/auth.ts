@@ -14,13 +14,37 @@ export async function getCurrentUser(): Promise<User | null> {
 
     if (!payload.userId) return null;
 
-    const user: User | null = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id: payload.userId as string,
       },
+      include: {
+        attendedUniversity: true,
+      },
     });
 
-    return user;
+    if (user == null) return null;
+
+    const university = user.attendedUniversity
+      ? {
+          id: user.attendedUniversity.id,
+          name: user.attendedUniversity.name,
+          country: user.attendedUniversity.country
+            ? user.attendedUniversity.country
+            : "Unknown",
+          degrees: [],
+        }
+      : undefined;
+
+    const res: User = {
+      username: user?.username as string,
+      email: user?.email as string,
+      id: user?.id as string,
+      attendedUniversity: university,
+      joinedAt: user?.joinedAt as Date,
+    };
+
+    return res;
   } catch (error) {
     console.error("Error in getCurrentUser:", error);
     return null;

@@ -14,3 +14,16 @@ export async function joinUniversity(universityId: string) {
     data: { attendedUniversityId: universityId },
   });
 }
+
+export async function leaveUniversity() {
+  const user: User | null = await getCurrentUser();
+
+  if (!user) throw new Error("User not authenticated");
+
+  console.log(`User ${user.username} is leaving their university`);
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { attendedUniversityId: null },
+  });
+}

@@ -1,4 +1,5 @@
 import Demographics from "@/app/components/university-metrics/demographics";
+import Weather from "@/app/components/university-metrics/weather";
 import { UniversityMetric } from "@/app/types/university-metric";
 
 export const universityMetrics: UniversityMetric[] = [
@@ -6,16 +7,8 @@ export const universityMetrics: UniversityMetric[] = [
     label: "Demographics",
     component: Demographics,
   },
-  // {
-  //   label: "Weather",
-  //   component: null,
-  // },
-  // {
-  //   label: "Student Life",
-  //   component: null,
-  // },
-  // {
-  //   label: "Rankings",
-  //   component: null,
-  // },
+  {
+    label: "Weather",
+    component: Weather,
+  },
 ] as const;

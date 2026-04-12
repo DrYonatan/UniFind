@@ -3,13 +3,23 @@
 import { universityMetrics } from "@/app/lib/university-metrics";
 import { University } from "@/app/types/university";
 import { UniversityMetric } from "@/app/types/university-metric";
+import { useState } from "react";
 
 export default function UniversityMetrics({
   university,
 }: {
   university: University;
 }) {
-  const CurrentMetricComponent = universityMetrics[0].component;
+  const [currentMetric, setCurrentMetric] = useState<UniversityMetric>(
+    universityMetrics[0],
+  );
+
+  let CurrentMetricComponent = currentMetric.component;
+
+  const onMetricChange = (metric: UniversityMetric) => {
+    setCurrentMetric(metric);
+    CurrentMetricComponent = metric.component;
+  };
 
   return (
     <div className="flex flex-col">
@@ -17,7 +27,8 @@ export default function UniversityMetrics({
         {universityMetrics.map((metric: UniversityMetric, index: number) => (
           <button
             key={index}
-            className="px-4 py-2 rounded-xl bg-gray-200 text-gray-800 font-medium hover:cursor-pointer hover:bg-gray-300 transition"
+            className={`${currentMetric.label === metric.label ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800"} px-4 py-2 rounded-xl font-medium hover:cursor-pointer transition`}
+            onClick={() => onMetricChange(metric)}
           >
             {metric.label}
           </button>

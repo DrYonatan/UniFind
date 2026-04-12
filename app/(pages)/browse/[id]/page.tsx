@@ -50,7 +50,7 @@ export default async function UniversityPage({ params }: { params: any }) {
                 <div className="w-24 h-10 self-center rounded bg-gray-300 animate-pulse" />
               }
             >
-              <JoinButton universityId={universityId} />
+              <JoinButton universityId={university.id} />
             </Suspense>
           </div>
 

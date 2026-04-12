@@ -1,4 +1,10 @@
-export default function Demographics() {
+import { University } from "@/app/types/university";
+
+export default function Demographics({
+  university,
+}: {
+  university: University;
+}) {
   return (
     <div>
       <h2 className="text-xl font-semibold text-gray-900 mb-6">
