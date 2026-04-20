@@ -140,16 +140,22 @@ export async function getOrCreateUniversity(
   externalId: string,
 ): Promise<University | null> {
   try {
-    let university = await prisma.university.findUnique({
+    let dbUniversity = await prisma.university.findUnique({
       where: { externalId },
+      include: {
+        _count: {
+          select: { users: true }, // or students, depending on your schema
+        },
+      },
     });
 
-    if (university) {
+    if (dbUniversity) {
       const res: University = {
-        id: university.id,
-        name: university.name,
-        country: university.country ? university.country : "Unknown",
+        id: dbUniversity.id,
+        name: dbUniversity.name,
+        country: dbUniversity.country ? dbUniversity.country : "Unknown",
         degrees: [],
+        studentCount: dbUniversity._count.users,
       };
 
       return res;
@@ -159,7 +165,7 @@ export async function getOrCreateUniversity(
 
     const apiUniversity: ApiUniversity = translateFromWikidata(apiData);
 
-    university = await prisma.university.create({
+    let university = await prisma.university.create({
       data: {
         name: apiUniversity.name,
         country: apiUniversity.country,

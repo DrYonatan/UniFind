@@ -14,7 +14,9 @@ export default function Demographics({
       <div className="grid grid-cols-2 gap-6">
         <div className="bg-gray-50 rounded-xl p-6">
           <p className="text-gray-500 text-sm">Total Students</p>
-          <p className="text-2xl font-bold text-gray-900 mt-2">23,000</p>
+          <p className="text-2xl font-bold text-gray-900 mt-2">
+            {university.studentCount}
+          </p>
         </div>
 
         <div className="bg-gray-50 rounded-xl p-6">
