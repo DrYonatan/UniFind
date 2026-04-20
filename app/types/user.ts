@@ -5,5 +5,7 @@ export interface User {
   username: string;
   email: string;
   attendedUniversity?: University;
+  birthYear?: number;
   joinedAt: Date;
+  hobbies?: string[];
 }

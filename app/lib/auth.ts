@@ -28,6 +28,7 @@ export async function getCurrentUser(): Promise<User | null> {
     const university = user.attendedUniversity
       ? {
           id: user.attendedUniversity.id,
+          externalId: user.attendedUniversity.externalId ?? undefined,
           name: user.attendedUniversity.name,
           country: user.attendedUniversity.country
             ? user.attendedUniversity.country

@@ -16,6 +16,8 @@ model User {
   attendedUniversityId String?     @map("attended_university_id")
   attendedUniversity   University? @relation(fields: [attendedUniversityId], references: [id])
 
+  birthYear Int?
+
   joinedAt DateTime @default(now()) @map("joined_at")
 
   @@map("users")
@@ -36,8 +38,16 @@ model University {
 model Degree {
   id           String     @id @default(cuid())
   name         String
+  type         String
   universityId String     @map("university_id")
   university   University @relation(fields: [universityId], references: [id])
 
   @@map("degrees")
+}
+
+model Hobby {
+  id   String @id @default(cuid())
+  name String
+
+  @@map("hobbies")
 }

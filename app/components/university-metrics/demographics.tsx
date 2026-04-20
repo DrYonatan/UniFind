@@ -15,13 +15,13 @@ export default function Demographics({
         <div className="bg-gray-50 rounded-xl p-6">
           <p className="text-gray-500 text-sm">Total Students</p>
           <p className="text-2xl font-bold text-gray-900 mt-2">
-            {university.studentCount}
+            {university.studentCount ?? 0}
           </p>
         </div>
 
         <div className="bg-gray-50 rounded-xl p-6">
-          <p className="text-gray-500 text-sm">International Students</p>
-          <p className="text-2xl font-bold text-gray-900 mt-2">25%</p>
+          <p className="text-gray-500 text-sm">Average age</p>
+          <p className="text-2xl font-bold text-gray-900 mt-2">24</p>
         </div>
 
         <div className="bg-gray-50 rounded-xl p-6">

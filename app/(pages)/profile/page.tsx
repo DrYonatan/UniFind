@@ -1,15 +1,16 @@
 import { logout } from "@/app/actions/auth";
 import { requireUser } from "@/app/lib/auth";
 import { User } from "@/app/types/user";
+import Link from "next/link";
 
 export default async function ProfilePage() {
   const user: User = await requireUser();
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md  slide-in-up">
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md slide-in-up">
         {/* Profile Header */}
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-4">
           {/* Profile Picture */}
           <div className="relative w-28 h-28">
             <img
@@ -26,6 +27,11 @@ export default async function ProfilePage() {
 
           {/* Email */}
           <p className="text-gray-500 mt-1">{user.email}</p>
+          <Link href="/profile/details-form" className="w-full">
+            <button className="w-full cursor-pointer bg-gray-400 hover:bg-blue-400 text-white font-medium py-2.5 rounded-xl transition duration-200 shadow-sm">
+              Details
+            </button>
+          </Link>
         </div>
 
         {/* Divider */}
