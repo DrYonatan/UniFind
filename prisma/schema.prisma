@@ -20,6 +20,8 @@ model User {
 
   joinedAt DateTime @default(now()) @map("joined_at")
 
+  hobbies Hobby[]
+
   @@map("users")
 }
 
@@ -48,6 +50,8 @@ model Degree {
 model Hobby {
   id   String @id @default(cuid())
   name String
+
+  users User[]
 
   @@map("hobbies")
 }
