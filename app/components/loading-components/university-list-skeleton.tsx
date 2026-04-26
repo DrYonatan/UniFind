@@ -1,4 +1,4 @@
-import { UniversityCardSkeleton } from "@/app/components/skeletons/university-card-skeleton";
+import { UniversityCardSkeleton } from "@/app/components/loading-components/university-card-skeleton";
 
 export function UniversityListSkeleton() {
   return (

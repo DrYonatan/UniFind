@@ -1,5 +1,5 @@
 import BrowseSideBar from "@/app/components/browse-side-bar";
-import { UniversityListSkeleton } from "@/app/components/skeletons/university-list-skeleton";
+import { UniversityListSkeleton } from "@/app/components/loading-components/university-list-skeleton";
 import { UniversityList } from "@/app/components/university-list";
 import { Suspense } from "react";
 
