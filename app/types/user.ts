@@ -1,3 +1,4 @@
+import { Hobby } from "@/app/types/hobby";
 import { University } from "./university";
 
 export interface User {
@@ -7,5 +8,5 @@ export interface User {
   attendedUniversity?: University;
   birthYear?: number;
   joinedAt: Date;
-  hobbies?: string[];
+  hobbies?: Hobby[];
 }

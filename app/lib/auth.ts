@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
 import { decrypt } from "@/app/lib/session";
+import { Hobby } from "@/app/types/hobby";
 import { User } from "@/app/types/user";
 import { JWTPayload } from "jose";
 import { cookies } from "next/headers";
@@ -20,6 +21,7 @@ export async function getCurrentUser(): Promise<User | null> {
       },
       include: {
         attendedUniversity: true,
+        hobbies: true,
       },
     });
 
@@ -43,6 +45,8 @@ export async function getCurrentUser(): Promise<User | null> {
       id: user?.id as string,
       attendedUniversity: university,
       joinedAt: user?.joinedAt as Date,
+      birthYear: user?.birthYear ?? undefined,
+      hobbies: user?.hobbies as Hobby[],
     };
 
     return res;

@@ -2,38 +2,45 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { saveUserDetails } from "@/app/actions/save-user-details";
+import { User } from "@/app/types/user";
+import { Hobby } from "@/app/types/hobby";
 
 type Props = {
-  user: any;
-  hobbies: string[];
+  user: User;
+  availableHobbies: Hobby[];
 };
 
-export default function DetailsForm({ user, hobbies }: Props) {
-  const [birthYear, setBirthYear] = useState("");
-  const [selectedHobbies, setSelectedHobbies] = useState<string[]>([]);
-  const [newHobby, setNewHobby] = useState("");
+export default function DetailsForm({ user, availableHobbies }: Props) {
+  const [birthYear, setBirthYear] = useState(user.birthYear ?? "");
+  const [selectedHobbies, setSelectedHobbies] = useState<Hobby[]>(
+    user.hobbies ?? [],
+  );
 
   const [query, setQuery] = useState("");
 
-  const filteredHobbies = hobbies.filter((h) =>
-    h.toLowerCase().includes(query.toLowerCase()),
+  const filteredHobbies = availableHobbies.filter((hobby: Hobby) =>
+    hobby.name.toLowerCase().includes(query.toLowerCase()),
   );
 
-  const addHobby = (hobby: string) => {
+  const addHobby = (hobby: Hobby) => {
     if (!selectedHobbies.includes(hobby)) {
       setSelectedHobbies([...selectedHobbies, hobby]);
     }
     setQuery("");
   };
 
-  const toggleHobby = (hobby: string) => {
-    setSelectedHobbies((prev) =>
-      prev.includes(hobby) ? prev.filter((h) => h !== hobby) : [...prev, hobby],
-    );
+  const handleSubmit = async (e: React.SubmitEvent) => {
+    e.preventDefault();
+
+    await saveUserDetails(Number(birthYear), selectedHobbies);
   };
 
   return (
-    <form className="flex flex-col gap-6 w-150 bg-gray-100 p-6 rounded-xl">
+    <form
+      className="flex flex-col gap-6 w-150 bg-gray-100 p-6 rounded-xl"
+      onSubmit={handleSubmit}
+    >
       {/* Birth Year */}
       <h1 className="font-bold text-xl self-center">Details</h1>
       <div>
@@ -64,7 +71,7 @@ export default function DetailsForm({ user, hobbies }: Props) {
       </div>
 
       {/* Hobbies */}
-      <div>
+      <div className="relative">
         <label className="block mb-1">Hobbies</label>
 
         {/* Search input */}
@@ -78,20 +85,20 @@ export default function DetailsForm({ user, hobbies }: Props) {
 
         {/* Dropdown */}
         {query && (
-          <div className="border mt-1 max-h-40 overflow-y-auto">
+          <div className="absolute left-0 right-0 top-full z-10 mt-1 border bg-white shadow-lg max-h-40 overflow-y-auto">
             {filteredHobbies.length > 0 ? (
               filteredHobbies.map((hobby) => (
                 <div
-                  key={hobby}
+                  key={hobby.id}
                   onClick={() => addHobby(hobby)}
                   className="p-2 cursor-pointer hover:bg-gray-100"
                 >
-                  {hobby}
+                  {hobby.name}
                 </div>
               ))
             ) : (
               <div
-                onClick={() => addHobby(query)}
+                onClick={() => addHobby({ id: "", name: query })}
                 className="p-2 cursor-pointer hover:bg-gray-100 text-blue-600"
               >
                 Add "{query}"
@@ -104,19 +111,24 @@ export default function DetailsForm({ user, hobbies }: Props) {
         <div className="flex flex-wrap gap-2 mt-2">
           {selectedHobbies.map((hobby) => (
             <span
-              key={hobby}
+              key={hobby.id}
               className="px-2 py-1 bg-blue-500 text-white rounded cursor-pointer"
               onClick={() =>
-                setSelectedHobbies((prev) => prev.filter((h) => h !== hobby))
+                setSelectedHobbies((prev) =>
+                  prev.filter((h) => h.id !== hobby.id),
+                )
               }
             >
-              {hobby} ✕
+              {hobby.name} ✕
             </span>
           ))}
         </div>
       </div>
 
-      <button type="submit" className="bg-black text-white p-2">
+      <button
+        type="submit"
+        className="bg-black text-white p-2 hover:cursor-pointer hover:bg-gray-600 ease-in-out duration-200"
+      >
         Save
       </button>
     </form>
