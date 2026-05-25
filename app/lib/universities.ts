@@ -150,12 +150,33 @@ export async function getOrCreateUniversity(
     });
 
     if (dbUniversity) {
+      const averageBirthYear = await prisma.user.aggregate({
+        where: {
+          attendedUniversityId: dbUniversity.id,
+          birthYear: {
+            not: null,
+          },
+        },
+        _avg: {
+          birthYear: true,
+        },
+      });
+
+      const currentYear = new Date().getFullYear();
+
+      const averageAge = averageBirthYear._avg.birthYear
+        ? Math.round(currentYear - averageBirthYear._avg.birthYear)
+        : 0;
+
       const res: University = {
         id: dbUniversity.id,
         name: dbUniversity.name,
-        country: dbUniversity.country ? dbUniversity.country : "Unknown",
+        country: dbUniversity.country ?? "Unknown",
         degrees: [],
-        studentCount: dbUniversity._count.users,
+        demographics: {
+          totalStudents: dbUniversity._count.users,
+          averageAge,
+        },
       };
 
       return res;
