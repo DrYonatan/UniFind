@@ -12,6 +12,7 @@ type Props = {
 };
 
 export default function DetailsForm({ user, availableHobbies }: Props) {
+  const [psycometry, setPsycometry] = useState(user.psycometry ?? "");
   const [birthYear, setBirthYear] = useState(user.birthYear ?? "");
   const [selectedHobbies, setSelectedHobbies] = useState<Hobby[]>(
     user.hobbies ?? [],
@@ -33,7 +34,7 @@ export default function DetailsForm({ user, availableHobbies }: Props) {
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
 
-    await saveUserDetails(Number(birthYear), selectedHobbies);
+    await saveUserDetails(psycometry, Number(birthYear), selectedHobbies);
   };
 
   return (
@@ -41,8 +42,19 @@ export default function DetailsForm({ user, availableHobbies }: Props) {
       className="flex flex-col gap-6 w-150 bg-gray-100 p-6 rounded-xl"
       onSubmit={handleSubmit}
     >
-      {/* Birth Year */}
+      {/* Psycometry */}
       <h1 className="font-bold text-xl self-center">Details</h1>
+      <div>
+        <label className="block mb-1">Psychometry Grade (200-800)</label>
+        <input
+          type="number"
+          min={200}
+          max={800}
+          value={psycometry}
+          onChange={(e) => setPsycometry(e.target.value)}
+          className="border p-2 w-full"
+        />
+      </div>
       <div>
         <label className="block mb-1">Birth Year</label>
         <input

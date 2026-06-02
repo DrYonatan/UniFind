@@ -16,6 +16,8 @@ model User {
   attendedUniversityId String?     @map("attended_university_id")
   attendedUniversity   University? @relation(fields: [attendedUniversityId], references: [id])
 
+  psycometry Int?
+
   birthYear Int?
 
   joinedAt DateTime @default(now()) @map("joined_at")

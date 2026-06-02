@@ -47,6 +47,7 @@ export async function getCurrentUser(): Promise<User | null> {
       joinedAt: user?.joinedAt as Date,
       birthYear: user?.birthYear ?? undefined,
       hobbies: user?.hobbies as Hobby[],
+      psycometry: user?.psycometry ?? undefined,
     };
 
     return res;

@@ -6,6 +6,7 @@ export interface User {
   username: string;
   email: string;
   attendedUniversity?: University;
+  psycometry?: number;
   birthYear?: number;
   joinedAt: Date;
   hobbies?: Hobby[];

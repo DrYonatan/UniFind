@@ -4,7 +4,11 @@ import { prisma } from "@/app/lib/prisma";
 import { requireUser } from "@/app/lib/auth";
 import { Hobby } from "@/app/types/hobby";
 
-export async function saveUserDetails(birthYear: number, hobbies: Hobby[]) {
+export async function saveUserDetails(
+  psycometry: number | string,
+  birthYear: number,
+  hobbies: Hobby[],
+) {
   const user = await requireUser();
 
   // Ensure hobbies exist
@@ -22,6 +26,7 @@ export async function saveUserDetails(birthYear: number, hobbies: Hobby[]) {
   await prisma.user.update({
     where: { id: user.id },
     data: {
+      psycometry: Number(psycometry) || null,
       birthYear,
       hobbies: {
         set: [], // optional: clears old hobbies first

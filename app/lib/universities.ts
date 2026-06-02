@@ -168,6 +168,22 @@ export async function getOrCreateUniversity(
         ? Math.round(currentYear - averageBirthYear._avg.birthYear)
         : 0;
 
+      const psychometryAgg = await prisma.user.aggregate({
+        where: {
+          attendedUniversityId: dbUniversity.id,
+          psycometry: {
+            not: null,
+          },
+        },
+        _avg: {
+          psycometry: true,
+        },
+      });
+
+      const averagePsychometry = psychometryAgg._avg.psycometry
+        ? Math.round(psychometryAgg._avg.psycometry)
+        : 0;
+
       const res: University = {
         id: dbUniversity.id,
         name: dbUniversity.name,
@@ -176,6 +192,8 @@ export async function getOrCreateUniversity(
         demographics: {
           totalStudents: dbUniversity._count.users,
           averageAge,
+          averagePsychometry,
+          topHobbies: [], // Placeholder, you would need to calculate this based on user data
         },
       };
 
